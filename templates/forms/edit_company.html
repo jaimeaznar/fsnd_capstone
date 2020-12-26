@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>New product page</h1>
+
+    {% block content %}
+    <div class="form-wrapper">
+        <form method="post" class="form" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="form-field">
+                {{ form.name.label }}
+                {{ form.name }}
+            </div>
+            <div class="form-field">
+                {{ form.city.label }}
+                {{ form.city }}
+            </div>
+            <div class="form-field">
+                {{ form.state.label }}
+                {{ form.state }}
+            </div>
+            <div class="form-field">
+                {{ form.address.label }}
+                {{ form.address }}
+            </div>
+            <div class="form-field">
+                {{ form.phone.label }}
+                {{ form.phone }}
+            </div>
+
+            <input type="submit" value="Edit Company"
+                class="btn btn-primary btn-lg btn-block">
+        </form>
+    </div>
+    {% endblock %}
+
+</body>
+
+</html>

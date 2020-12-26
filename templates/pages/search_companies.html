@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Search company page</h1>
+    {% block content %}
+    <h3>Number of search results for "{{ search_term }}": {{ response.count }}
+    </h3>
+    <ul class="items">
+        {% for company in response.data %}
+        <li>
+            <a href="/companies/{{ company.id }}">
+                <i class="fas fa-music"></i>
+                <div class="item">
+                    <h5>{{ company.name }}</h5>
+                    <h5>{{ company.city }}</h5>
+                    <h5>{{ company.state }}</h5>
+                    <h5>{{ company.address }}</h5>
+                    <h5>{{ company.phone }}</h5>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endblock %}
+</body>
+
+</html>
