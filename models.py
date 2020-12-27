@@ -25,11 +25,11 @@ def setup_db(app):
 class Company(db.Model):
     __tablename__ = 'company'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
+    name = db.Column(db.String, nullable=False)
+    city = db.Column(db.String(120), nullable=False)
+    state = db.Column(db.String(120), nullable=False)
+    address = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(120), nullable=False)
     # relationship with product
     product = db.relationship(
         "Product", back_populates="company",
@@ -61,9 +61,9 @@ class Company(db.Model):
 class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    image_link = db.Column(db.String(500))
-    product_description = db.Column(db.Text)
+    name = db.Column(db.String, nullable=False)
+    image_link = db.Column(db.String(500), nullable=False)
+    product_description = db.Column(db.Text, nullable=False)
     #relationship
     company_id = db.Column(db.Integer, db.ForeignKey('company.id', ondelete='CASCADE'))
 

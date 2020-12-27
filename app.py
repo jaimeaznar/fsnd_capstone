@@ -477,8 +477,8 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
     @app.route('/companies/create', methods=['GET'])
     @app.route('/api/companies/create', methods=['GET'])
-    # @requires_auth('get:company')
-    def create_company_from():
+    @requires_auth('get:company')
+    def create_company_from(jwt):
         form = CompanyForm()
         if request.path == '/api/companies/create':
             return jsonify({
@@ -489,8 +489,8 @@ def create_app(test_config=None):
 
     @app.route('/companies/create', methods=['POST'])
     @app.route('/api/companies/create', methods=['POST'])
-    # @requires_auth('post:company')
-    def create_company_submission():
+    @requires_auth('post:company')
+    def create_company_submission(jwt):
         error = False
         # add to db
         try:
@@ -515,17 +515,17 @@ def create_app(test_config=None):
             print('Company ' + request.form['name']  + ' was successfully added!')
         
         if error:
-            abort(404)
+            abort(400)
         else:
             if request.path == '/api/companies/create':
                 return jsonify({
                     'success': True,
                     'company':{
-                        'name': new_company.name,
-                        'city': new_company.city,
-                        'state': new_company.state,
-                        'address': new_company.address,
-                        'phone': new_company.phone,
+                        'name': request.form.get('name'),
+                        'city': request.form.get('city'),
+                        'state': request.form.get('state'),
+                        'address': request.form.get('address'),
+                        'phone': request.form.get('phone'),
                     },
                 }), 200
             return redirect(url_for('index'))
@@ -536,8 +536,8 @@ def create_app(test_config=None):
 
     @app.route('/companies/<int:company_id>/edit', methods=['GET'])
     @app.route('/api/companies/<int:company_id>/edit', methods=['GET'])
-    # @requires_auth('get:company')
-    def edit_company(company_id):
+    @requires_auth('get:company')
+    def edit_company(jwt, company_id):
         # get company based on id
         company = Company.query.filter_by(id=company_id).first_or_404()
         form = CompanyForm(
@@ -562,8 +562,8 @@ def create_app(test_config=None):
 
     @app.route('/companies/<int:company_id>/edit', methods=['PATCH'])
     @app.route('/api/companies/<int:company_id>/edit', methods=['PATCH'])
-    # @requires_auth('patch:company')
-    def edit_company_submission(company_id):
+    @requires_auth('patch:company')
+    def edit_company_submission(jwt, company_id):
         error = False
         # get product we want to edit
         company = Company.query.filter_by(id=company_id).first_or_404()
@@ -587,17 +587,17 @@ def create_app(test_config=None):
             db.session.close()
             #return redirect(url_for('show_company',company_id=company_id))
         if error:
-            abort(404)
+            abort(400)
         else:
             if request.path == '/api/companies/' + str(company_id) + '/edit':
                 return jsonify({
                     'success': True,
                     'company': {
-                        'name': company.name,
-                        'city': company.city,
-                        'state': company.state,
-                        'address': company.address,
-                        'phone': company.phone
+                        'name': request.form.get('name'),
+                        'city': request.form.get('city'),
+                        'state': request.form.get('state'),
+                        'address': request.form.get('address'),
+                        'phone': request.form.get('phone')
                     }
                 }), 200
             # return redirect(url_for('show_company',company_id=company_id))
@@ -609,8 +609,8 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
     @app.route('/companies/<int:company_id>/delete', methods=['DELETE'])
     @app.route('/api/companies/<int:company_id>/delete', methods=['DELETE'])
-    # @requires_auth('delete:company')
-    def delete_company(company_id):
+    @requires_auth('delete:company')
+    def delete_company(jwt, company_id):
         error = False
         print('getting company')
         company = Company.query.filter_by(id=company_id).first_or_404()
@@ -633,7 +633,7 @@ def create_app(test_config=None):
 
         if error:
             print('aborting')
-            abort(404)
+            abort(400)
         else:
             # delete images from the folder
             for path in img_paths:
@@ -673,6 +673,12 @@ def create_app(test_config=None):
             "success": False, 
             "error": 401,
             "message": "unauthorized"
+        }), 401
+    
+    @app.errorhandler(AuthError)
+    def authentification_failure(error):
+        return jsonify({
+            "success": False
         }), 401
 
     @app.errorhandler(403)
