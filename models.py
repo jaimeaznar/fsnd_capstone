@@ -3,16 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 
-database_path = os.environ.get('DATABASE_URL')
-if not database_path:
-    database_name = 'capstone'
-    database_path = 'postgresql://jaimeaznar@{}/{}'.format('localhost:5432',database_name)
-
 db = SQLAlchemy()
 
 
-def setup_db(app):
+def setup_db(app, database_path):
     app.config.from_object('config.DevelopmentConfig')
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     db.app = app
     db.init_app(app)
     db.create_all()
@@ -62,18 +58,19 @@ class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    image_link = db.Column(db.String(500), nullable=False)
-    product_description = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(500), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     #relationship
     company_id = db.Column(db.Integer, db.ForeignKey('company.id', ondelete='CASCADE'))
 
     company = db.relationship("Company", back_populates="product")
 
 
-    def __init__(self, name, image_link, product_description):
+    def __init__(self, name, image, description, company_id):
         self.name = name
-        self.image_link = image_link
-        self.product_description = product_description
+        self.image = image
+        self.description = description
+        self.company_id = company_id
     
     def insert(self):
         db.session.add(self)

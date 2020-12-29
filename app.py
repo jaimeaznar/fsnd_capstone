@@ -24,8 +24,13 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 def create_app(test_config=None):
     # create and cofigure the app
+    database_path = os.environ.get('DATABASE_URL')
+    if not database_path:
+        database_name = 'capstone'
+        database_path = 'postgresql://jaimeaznar@{}/{}'.format('localhost:5432',database_name)
+    
     app = Flask(__name__)
-    setup_db(app)
+    setup_db(app, database_path)
     
     #CORS app
     cors = CORS(app)
@@ -67,8 +72,8 @@ def create_app(test_config=None):
         try:
             for product in Product.query.all():
                 product_dict = {'name':product.name,
-                                'image_link':product.image_link,
-                                'product_description': product.product_description
+                                'image':product.image,
+                                'description': product.description
                                 }
                 products.append(product_dict)
             
@@ -106,13 +111,15 @@ def create_app(test_config=None):
                 "data": [{
                     "id": p.id,
                     "name": p.name,
-                    "description": p.product_description
+                    "description": p.description
                 } for p in results]
             } 
+            print(f'results:{results}')
+            print(f'response:{response}')
             #return render_template('pages/search_products.html',response=response, search_term=search_term)
         
         except:
-            flash('An error occurred while searching, please try again')
+            print('An error occurred while searching, please try again')
             error = True
         
         if error:
@@ -120,11 +127,19 @@ def create_app(test_config=None):
 
         else:
             if request.path == '/api/products/search':
-                return jsonify({
-                    'success': True,
-                    'search_term': search_term,
-                    'products': response
-                }), 200
+                if response['count'] != 0:
+                    return jsonify({
+                        'success': True,
+                        'search_term': search_term,
+                        'products': response
+                    }), 200
+                else:
+                    return jsonify({
+                        'success': False,
+                        'search_term': search_term,
+                        'products': response
+                    }), 404
+            
             return render_template('pages/search_products.html',response=response, search_term=search_term)
 
 
@@ -140,8 +155,8 @@ def create_app(test_config=None):
             data = {
                 'id': product.id,
                 'name': product.name,
-                'image_link': product.image_link,
-                'product_description': product.product_description
+                'image': product.image,
+                'description': product.description
 
             }
             # return render_template('pages/show_product.html',product=data)
@@ -167,8 +182,8 @@ def create_app(test_config=None):
 
     @app.route('/products/create', methods=['GET'])
     @app.route('/api/products/create', methods=['GET'])
-    # @requires_auth('get:product')
-    def create_product_form():
+    @requires_auth('get:product')
+    def create_product_form(jwt):
         # create a form object
         form = ProductForm()
         if request.path == '/api/products/create':
@@ -184,17 +199,19 @@ def create_app(test_config=None):
 
     @app.route('/products/create', methods=['POST'])
     @app.route('/api/products/create', methods=['POST'])
-    # @requires_auth('post:product')
-    def create_product_submission():
+    @requires_auth('post:product')
+    def create_product_submission(jwt):
         error = False
+        filename = request.files['image'].filename
+        print(filename)
         # add to db
         try:
             #print(UPLOAD_FOLDER)
             # create product object with form data
             new_product = Product(
                 name = request.form.get('name'),
-                image_link = app.config['UPLOAD_FOLDER'] + "/" + request.files['image'].filename,
-                product_description = request.form.get('description'),
+               # image = app.config['UPLOAD_FOLDER'] + "/" + filename,
+                description = request.form.get('description'),
                 company_id = request.form.get('company')
             )
             # add to db
@@ -209,7 +226,7 @@ def create_app(test_config=None):
         
         if error:
             print('Product ' + request.form['name'] + 'with image' + request.files['image'].filename + ' was not listed.')
-            abort(404)
+            abort(400)
         
         else:
             # check if the post request has the file part
@@ -246,8 +263,8 @@ def create_app(test_config=None):
                     'success': True,
                     'new_product': {
                         'name': request.form['name'],
-                        'image_link': request.form['company'],
-                        'product_description': request.form['description'],
+                        'image': request.files['image'].filename,
+                        'description': request.form['description']
                     },
                 }), 200
 
@@ -259,14 +276,14 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
     @app.route('/products/<int:product_id>/edit', methods=['GET'])
     @app.route('/api/products/<int:product_id>/edit', methods=['GET'])
-    # @requires_auth('get:product')
-    def edit_product_form(product_id):
+    @requires_auth('get:product')
+    def edit_product_form(jwt,product_id):
         # get the product we want to modify
         product = Product.query.filter_by(id=product_id).first_or_404()
         # Show info on form
         form = ProductForm(
             name = product.name,
-            description = product.product_description
+            description = product.description
         )
         if request.path == f'/api/products/{str(produc_id)}/edit':
             return jsonify({
@@ -276,18 +293,18 @@ def create_app(test_config=None):
 
     @app.route('/products/<int:product_id>/edit', methods=['PATCH'])
     @app.route('/api/products/<int:product_id>/edit', methods=['PATCH'])
-    # @requires_auth('patch:product')
-    def edit_product_submission(product_id):
+    @requires_auth('patch:product')
+    def edit_product_submission(jwt, product_id):
         error = False
         # get product we want to edit
         product = Product.query.filter_by(id=product_id).first_or_404()
         # get old image path
-        old_img_path = product.image_link
+        old_img_path = product.image
         # access db
         try:
             # set the new values
             product.name = request.form.get('name')
-            product.product_description = request.form.get('description')
+            product.description = request.form.get('description')
 
             if 'image' in request.files:
                 file = request.files['image']
@@ -300,7 +317,7 @@ def create_app(test_config=None):
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-                    product.image_link = UPLOAD_FOLDER + "/" + request.files['image'].filename
+                    product.image = UPLOAD_FOLDER + "/" + request.files['image'].filename
                     os.remove(old_img_path)
                 
             # commit changes
@@ -322,8 +339,8 @@ def create_app(test_config=None):
                     'success': True,
                     'product': {
                         'name': product.name,
-                        'image_link': product.image_link,
-                        'product_description': product.product_description,
+                        'image': product.image,
+                        'description': product.description,
                         'company_id': product.company_id
                     },
                 }), 200
@@ -334,8 +351,8 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
     @app.route('/products/<int:product_id>/delete', methods=['DELETE'])
     @app.route('/api/products/<int:product_id>/delete', methods=['DELETE'])
-    # @requires_auth('delete:product')
-    def delete_product(product_id):
+    @requires_auth('delete:product')
+    def delete_product(jwt, product_id):
         error = False
         product = Product.query.filter_by(id=product_id).first_or_404()
         
@@ -353,15 +370,16 @@ def create_app(test_config=None):
             abort(404)
         else:
             # delete image
-            os.remove(product.image_link)
+            if product.image != '':
+                os.remove(product.image)
             print(f'Successfully deleted product {product.name}')
             if request.path == '/api/products/' + str(product_id) + '/delete':
                 return jsonify({
                     'success': True,
                     'product': {
                         'name': product.name,
-                        'image_link': product.image_link,
-                        'product_description': product.product_description,
+                        'image': product.image,
+                        'description': product.description,
                         'company_id': product.company_id
                     },
                 }), 200
@@ -429,11 +447,18 @@ def create_app(test_config=None):
             abort(404)
         else:
             if request.path == '/api/companies/search':
-                return jsonify({
-                    'success': True,
-                    'search_term': search_term,
-                    'response': response
-                }), 200
+                if response['count'] != 0:
+                    return jsonify({
+                        'success': True,
+                        'search_term': search_term,
+                        'products': response
+                    }), 200
+                else:
+                    return jsonify({
+                        'success': False,
+                        'search_term': search_term,
+                        'products': response
+                    }), 404
             return render_template('pages/search_companies.html',response=response, search_term=search_term)
         
 
@@ -616,7 +641,7 @@ def create_app(test_config=None):
         company = Company.query.filter_by(id=company_id).first_or_404()
         print(f'company: {company}')
         # get path to all images from company products
-        img_paths = [product.image_link for product in Product.query.filter_by(company_id=company_id)]
+        img_paths = [product.image for product in Product.query.filter_by(company_id=company_id)]
         print(img_paths)
         # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
         try:
@@ -636,8 +661,10 @@ def create_app(test_config=None):
             abort(400)
         else:
             # delete images from the folder
-            for path in img_paths:
-                os.remove(path)
+            if img_paths:
+                for path in img_paths:
+                    if path != '':
+                        os.remove(path)
 
             if request.path == '/api/companies/' + str(company_id) + '/delete':
                 return jsonify({
