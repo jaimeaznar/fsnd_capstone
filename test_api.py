@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import db, setup_db, Company, Product
 from forms import *
-jwt_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InQ3N2JJcTR6OUtwcVQ1QXYyaWlZdCJ9.eyJpc3MiOiJodHRwczovL2phaWF6bi5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWYyMDZjMGM2ODAzM2YwMDNkNWRjMjdhIiwiYXVkIjoiY2Fwc3RvbmVfYXBpIiwiaWF0IjoxNjA5MzQ0MTk1LCJleHAiOjE2MDk0MzA1OTUsImF6cCI6ImlLMVpXeG95SmlPTG1CdHlkNXU0WVhtdHR4S08yTGNSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6Y29tcGFueSIsImRlbGV0ZTpwcm9kdWN0IiwiZ2V0OmNvbXBhbnkiLCJnZXQ6cHJvZHVjdCIsInBhdGNoOmNvbXBhbnkiLCJwYXRjaDpwcm9kdWN0IiwicG9zdDpjb21wYW55IiwicG9zdDpwcm9kdWN0Il19.t19yYKdGt7oH9PNOtCMslzwGxbZMyiTspxuts7O-eypZ2dIB6HKb2pFtVQ9PDJRtffcBMpZOv_FyD05bERxRcUa4FRRfGTOcGY3kv6RTooykzxdfZTvEfB81ANjAgQe76SDmY4rly6j7Sg3acTt2e2ZCFpdpIUZgm9oXAqypCnT88VViUVx-nkPQY4WZTFaIRjH0bwIZdXJy2-PU2dqgkdqCDNdZlRFv6dRcFx_QrhOo4l___jCRytnjLm16HqlJD3oYxSwSVSoUOamUHJht-zpczj9MZOtXXtgzalA91TbY8tuUULTSmcvX4LrLFuVnazrY3LUnX58e1f7kxgIoIg'
+jwt_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InQ3N2JJcTR6OUtwcVQ1QXYyaWlZdCJ9.eyJpc3MiOiJodHRwczovL2phaWF6bi5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWYyMDZjMGM2ODAzM2YwMDNkNWRjMjdhIiwiYXVkIjoiY2Fwc3RvbmVfYXBpIiwiaWF0IjoxNjA5NDA0MTY3LCJleHAiOjE2MDk0OTA1NjcsImF6cCI6ImlLMVpXeG95SmlPTG1CdHlkNXU0WVhtdHR4S08yTGNSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6Y29tcGFueSIsImRlbGV0ZTpwcm9kdWN0IiwiZ2V0OmNvbXBhbnkiLCJnZXQ6cHJvZHVjdCIsInBhdGNoOmNvbXBhbnkiLCJwYXRjaDpwcm9kdWN0IiwicG9zdDpjb21wYW55IiwicG9zdDpwcm9kdWN0Il19.WJGuAwUvWpEeKxxULNvMPMXpH0TzoTnsaWfFbkbsjDr5l9OlM_pvGg-PABIgB48Wa91wEd-k6XwvtQmMi1PoaYipGZOIJ5Q3PzJmLcjrIsN_tSQJfESAGNgIkR-FNTNlgOmX3Qp-XkDBl44qP2VlUCPgEBSS0GiRoGrHwzYE1V-a82mbqUN96qV4HWrwb4Ds23mk2IIWcAR1Ivr_ehzvr-3t26JYmlRCfmx7VaHBjkwAnVAztK7f4fsbJtdBojQX5M5o4X337uIRyrSJO18SADMk3bG9hL-haQ5AtZPiXyHchFmuUe3IOVsEGPXbmHPiPGnI22L56FEj-CtRbUSzcQ'
 
 
 class CapstoneTestCase(unittest.TestCase):
@@ -53,6 +53,7 @@ class CapstoneTestCase(unittest.TestCase):
 #  Tests
 #----------------------------------------------------------------------------#
     # Test index page
+
     def test_index(self):
 
         response = self.client().get('/')
@@ -73,16 +74,17 @@ class CapstoneTestCase(unittest.TestCase):
     def test_search_product(self):
         print('test_search_product')
         response = self.client().get('/api/products/search',
-                            query_string=dict(search_term='test product'))
+                                     query_string=dict(search_term='test product'))
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
     # Test search product by name not found
+
     def test_search_product_not_found(self):
         print('test_search_product_not_found')
         response = self.client().get('/api/products/search',
-                            query_string=dict(search_term='facebook'))
+                                     query_string=dict(search_term='facebook'))
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
@@ -111,7 +113,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_search_company(self):
 
         response = self.client().get('/api/companies/search',
-                            query_string=dict(search_term='test company'))
+                                     query_string=dict(search_term='test company'))
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -120,9 +122,8 @@ class CapstoneTestCase(unittest.TestCase):
     # Test search company by name not found
     def test_search_company_not_found(self):
         response = self.client().get('/api/company/search',
-                            query_string=dict(search_term='facebook'))
+                                     query_string=dict(search_term='facebook'))
         data = json.loads(response.data)
-
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['success'], False)
@@ -135,17 +136,17 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
 
-
     ################
     # Create Company
     ################
 
     # Create company get form
+
     def test_form_create_company(self):
         response = self.client().get('/api/companies/create',
-                                        headers={
-                                            'Authorization': 'Bearer ' + jwt_token}
-                                    )
+                                     headers={
+                                         'Authorization': 'Bearer ' + jwt_token}
+                                     )
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -154,15 +155,15 @@ class CapstoneTestCase(unittest.TestCase):
     # Create company post
     def test_create_company(self):
         response = self.client().post('/api/companies/create',
-                                        data=dict(
-                                            name='test name',
-                                            city='test city',
-                                            state='test state',
-                                            address='test address',
-                                            phone='phone'),
-                                        headers={
-                                            'Authorization': 'Bearer ' + jwt_token
-                                            })
+                                      data=dict(
+                                          name='test name',
+                                          city='test city',
+                                          state='test state',
+                                          address='test address',
+                                          phone='phone'),
+                                      headers={
+                                          'Authorization': 'Bearer ' + jwt_token
+                                      })
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -173,13 +174,13 @@ class CapstoneTestCase(unittest.TestCase):
     def test_create_company_with_incomplete_data(self):
 
         response = self.client().post('/api/companies/create',
-                                        data=dict(
-                                            name='test name',
-                                            city='test city'
-                                        ),
-                                        headers={
-                                            'Authorization': 'Bearer ' + jwt_token
-                                            })
+                                      data=dict(
+                                          name='test name',
+                                          city='test city'
+                                      ),
+                                      headers={
+                                          'Authorization': 'Bearer ' + jwt_token
+                                      })
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 400)
@@ -188,13 +189,13 @@ class CapstoneTestCase(unittest.TestCase):
     # Create company post without token
     def test_create_company_without_token(self):
         response = self.client().post('/api/companies/create',
-                                        data=dict(
-                                            name='test name',
-                                            city='test city',
-                                            state='test state',
-                                            address='test address',
-                                            phone='phone')
-                                    )
+                                      data=dict(
+                                          name='test name',
+                                          city='test city',
+                                          state='test state',
+                                          address='test address',
+                                          phone='phone')
+                                      )
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 401)
@@ -206,11 +207,12 @@ class CapstoneTestCase(unittest.TestCase):
 #     ################
 
     # Create product form
+
     def test_form_create_product(self):
         response = self.client().get('/api/products/create',
-                                        headers={
-                                            'Authorization': 'Bearer ' + jwt_token}
-                                    )
+                                     headers={
+                                         'Authorization': 'Bearer ' + jwt_token}
+                                     )
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -220,11 +222,11 @@ class CapstoneTestCase(unittest.TestCase):
     def test_create_product(self):
         path_img = 'static/img/tomahawk.jpg'
         with open(path_img, 'rb') as img:
-            
+
             response = self.client().post('/api/products/create',
                                           data=dict(
                                               name='test name',
-                                              image = img,
+                                              image=img,
                                               description='test description',
                                               company=self.company.id,
 
@@ -245,9 +247,9 @@ class CapstoneTestCase(unittest.TestCase):
     def test_form_patch_company(self):
         # Create company get form
         response = self.client().get('/api/companies/1/edit',
-                                        headers={
-                                            'Authorization': 'Bearer ' + jwt_token}
-                                    )
+                                     headers={
+                                         'Authorization': 'Bearer ' + jwt_token}
+                                     )
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -256,15 +258,15 @@ class CapstoneTestCase(unittest.TestCase):
     # Patch company post
     def test_patch_company(self):
         response = self.client().patch('/api/companies/1/edit',
-                                        data=dict(
-                                            name='patch name',
-                                            city='patch city',
-                                            state='patch state',
-                                            address='patch address',
-                                            phone='patch phone'),
-                                        headers={
-                                            'Authorization': 'Bearer ' + jwt_token
-                                            })
+                                       data=dict(
+                                           name='patch name',
+                                           city='patch city',
+                                           state='patch state',
+                                           address='patch address',
+                                           phone='patch phone'),
+                                       headers={
+                                           'Authorization': 'Bearer ' + jwt_token
+                                       })
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -272,13 +274,13 @@ class CapstoneTestCase(unittest.TestCase):
     # Patch company without token
     def test_patch_company_without_token(self):
         response = self.client().patch('/api/companies/1/edit',
-                                        data=dict(
-                                            name='patch name',
-                                            city='patch city',
-                                            state='patch state',
-                                            address='patch address',
-                                            phone='patch phone')
-                                        )
+                                       data=dict(
+                                           name='patch name',
+                                           city='patch city',
+                                           state='patch state',
+                                           address='patch address',
+                                           phone='patch phone')
+                                       )
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data['success'], False)
@@ -315,7 +317,7 @@ class CapstoneTestCase(unittest.TestCase):
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(data['success'],False)
+        self.assertEqual(data['success'], False)
 
 
 if __name__ == "__main__":

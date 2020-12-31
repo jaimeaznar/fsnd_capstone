@@ -10,11 +10,13 @@ For the delete test to work it is necessary to have a .jpg file named `'tomahawk
 
 ## Error handling
 
-```{
+```
+{
     "success": False,
     "error": error,
     "message": error message
-}```
+}
+```
 
 The API will return one of the following errors when a request fails:
 
@@ -25,13 +27,14 @@ The API will return one of the following errors when a request fails:
 - 404 -- Not Found - The requested resource could not be found
 - 405 -- Method Not Allowed - The specified method is not allowed for the endpoint
 - 500 -- Internal Server Error - The server encountered an unexpected condition
+
 ```
 
 ## Database Schema
 
 Here is a representation of the db schema (models.py):
 
-```
+
 Company
 - id (primary key)
 - name
@@ -94,8 +97,9 @@ The API will return when a request succeeds:
 
 # Endpoint Overview
 
-# GET
+Postman can be used. Make sure token is send along with requests for all CRUD endpoints.
 
+# COMPANY: GET | POST | PATCH | DELETE 
 
 ## GET /
 This endpoint doesn't require authentication
@@ -156,6 +160,104 @@ Sample response for db with 1 company:
         "phone": "12345",
         "state": "Madrid"
     },
+    "success": true
+}
+```
+
+## GET /api/companies/create
+Returns 200 (template rendered ok)
+```
+{
+    'success': True,
+}
+```
+
+## POST /companies/create
+```
+{
+    "company": {
+        "address": "test address",
+        "city": "test city",
+        "name": "test name",
+        "phone": "test phone",
+        "state": "test state"
+    },
+    "success": true
+}
+```
+
+## GET /api/companies/<int:company_id>/edit
+for company with id = 2. Id might change so check db for current existing ids.
+```
+{
+    "company": {
+        "address": "test address",
+        "city": "test city",
+        "name": "test name",
+        "phone": "test phone",
+        "state": "test state"
+    },
+    "success": true
+}
+```
+
+## POST /api/companies/<int:company_id>/edit
+for company with id = 2 patching name
+```
+{
+    "company": {
+        "address": "test address",
+        "city": "test city",
+        "name": "test name patched",
+        "phone": "test phone",
+        "state": "test state"
+    },
+    "success": true
+}
+```
+
+## DELETE /api/companies/<int:company_id>/edit
+{
+    "id": 2,
+    "success": true
+}
+
+
+# PRODUCT GET | POST | PATCH | DELETE
+
+## GET /api/products
+```
+{
+    "products": [
+        {
+            "description": "descripcion solomillo",
+            "image": "static/img/img_solomillo.jpg",
+            "name": "solomillo"
+        },
+        {
+            "description": "descripcion tomahawk",
+            "image": "static/img/tomahawk.jpg",
+            "name": "tomahawk"
+        }
+    ],
+    "success": true
+}
+```
+
+## GET /api/products/search (?search_term=solomillo)
+```
+{
+    "products": {
+        "count": 1,
+        "data": [
+            {
+                "description": "descripcion solomillo",
+                "id": 1,
+                "name": "solomillo"
+            }
+        ]
+    },
+    "search_term": "solomillo",
     "success": true
 }
 ```

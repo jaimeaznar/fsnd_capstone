@@ -103,7 +103,7 @@ def create_app(test_config=None):
             search_term = request.args.get('search_term')
             # case insensitive --> ilike
             results = Product.query.filter(
-                Product.name.ilike(f'%{search_term}')).all()
+                Product.name.ilike(f'%{search_term}%')).all()
 
             # response object passed to the view
             response = {
@@ -215,7 +215,7 @@ def create_app(test_config=None):
             # create product object with form data
             new_product = Product(
                 name=request.form.get('name'),
-                image = app.config['UPLOAD_FOLDER'] + "/" + filename,
+                image=app.config['UPLOAD_FOLDER'] + "/" + filename,
                 description=request.form.get('description'),
                 company_id=request.form.get('company')
             )
