@@ -99,7 +99,7 @@ The API will return when a request succeeds:
 
 Postman can be used. Make sure token is send along with requests for all CRUD endpoints.
 
-# COMPANY: GET | POST | PATCH | DELETE 
+# COMPANY -- GET | POST | PATCH | DELETE 
 
 ## GET /
 This endpoint doesn't require authentication
@@ -217,13 +217,14 @@ for company with id = 2 patching name
 ```
 
 ## DELETE /api/companies/<int:company_id>/edit
+```
 {
     "id": 2,
     "success": true
 }
+```
 
-
-# PRODUCT GET | POST | PATCH | DELETE
+# PRODUCT -- GET | POST | PATCH | DELETE
 
 ## GET /api/products
 ```
@@ -261,3 +262,69 @@ for company with id = 2 patching name
     "success": true
 }
 ```
+## GET /api/products/<int:product_id> 
+for product with id = 2
+```
+{
+    "data": {
+        "description": "descripcion tomahawk",
+        "id": 2,
+        "image": "static/img/tomahawk.jpg",
+        "name": "tomahawk"
+    },
+    "success": true
+}
+```
+
+## GET /api/products/create
+Return 200 ok if form template renders
+```
+{
+    "success": true
+}
+```
+
+## POST /api/products/create
+```
+{
+    "new_product": {
+        "company_id": "1",
+        "description": "post test description",
+        "image": "post test image.jpg",
+        "name": "post name test"
+    },
+    "success": true
+}
+```
+
+## GET /api/products/<int:product_id>/edit
+for product with id = 2
+```
+{
+    "id": 2,
+    "name": "tomahawk",
+    "success": true
+}
+```
+
+## POST /api/products/<int:product_id>/edit
+for product with id = 2
+```
+{
+    "product_id": 2,
+    "success": true
+}
+```
+
+## DELETE /api/products/<ing:product_id>/delete
+for product with id = 1
+```{
+    "product": {
+        "company_id": 1,
+        "description": "descripcion solomillo",
+        "image": "static/img/img_solomillo.jpg",
+        "name": "solomillo"
+    },
+    "success": true
+}```
+

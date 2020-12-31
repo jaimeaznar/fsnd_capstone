@@ -223,7 +223,6 @@ def create_app(test_config=None):
             new_product.insert()
 
         except BaseException as e:
-            print(">>>>>>>>>>>", e.__str__())
             error = True
             db.session.rollback()
         finally:
@@ -280,7 +279,8 @@ def create_app(test_config=None):
                     'new_product': {
                         'name': request.form['name'],
                         'image': request.files['image'].filename,
-                        'description': request.form['description']
+                        'description': request.form['description'],
+                        'company_id': request.form.get('company')
                     },
                 }), 200
 
@@ -301,9 +301,11 @@ def create_app(test_config=None):
             name=product.name,
             description=product.description
         )
-        if request.path == f'/api/products/{str(produc_id)}/edit':
+        if request.path == f'/api/products/{str(product_id)}/edit':
             return jsonify({
                 'success': True,
+                'name': product.name,
+                'id': product.id
             }), 200
         return render_template(
             'forms/edit_product.html',
@@ -318,7 +320,9 @@ def create_app(test_config=None):
         # get product we want to edit
         product = Product.query.filter_by(id=product_id).first_or_404()
         # get old image path
+        print(product)
         old_img_path = product.image
+        print(old_img_path)
         # access db
         try:
             # set the new values
@@ -333,23 +337,28 @@ def create_app(test_config=None):
                     print('No selected file')
 
                 if file and allowed_file(file.filename):
+                    print('filename allowed')
                     filename = secure_filename(file.filename)
                     file.save(
                         os.path.join(
                             app.config['UPLOAD_FOLDER'],
                             filename))
+                    print(f'printing file name: {filename}')
 
-                    product.image = UPLOAD_FOLDER + "/" + \
+                    product.image = app.config['UPLOAD_FOLDER'] + "/" + \
                         request.files['image'].filename
+                    print(product.image)
                     os.remove(old_img_path)
 
             # commit changes
             product.update()
 
-        except BaseException:
+        except BaseException as e:
+            print(f'>>>>{e.__str__()}')
             error = True
             db.session.rollback()
             print('Error while editing product. Please try again later.')
+
         finally:
             db.session.close()
             # return redirect(url_for('show_product',product_id=product_id))
@@ -360,12 +369,7 @@ def create_app(test_config=None):
             if request.path == '/api/products/' + str(product_id) + '/edit':
                 return jsonify({
                     'success': True,
-                    'product': {
-                        'name': product.name,
-                        'image': product.image,
-                        'description': product.description,
-                        'company_id': product.company_id
-                    },
+                    'product_id': product_id,
                 }), 200
             return render_template(
                 'pages/show_product.html',
@@ -374,9 +378,9 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
     # Delete products.
     #----------------------------------------------------------------------------#
-    @app.route('/products/<int:product_id>/delete', methods=['DELETE'])
-    @app.route('/api/products/<int:product_id>/delete', methods=['DELETE'])
-    @requires_auth('delete:product')
+    @ app.route('/products/<int:product_id>/delete', methods=['DELETE'])
+    @ app.route('/api/products/<int:product_id>/delete', methods=['DELETE'])
+    @ requires_auth('delete:product')
     def delete_product(jwt, product_id):
         error = False
         product = Product.query.filter_by(id=product_id).first_or_404()
@@ -385,7 +389,8 @@ def create_app(test_config=None):
         # commit could fail.
         try:
             product.delete()
-        except BaseException:
+        except BaseException as e:
+            print(f'<<<<{e.__str__()}')
             error = True
             db.session.rollback()
         finally:
@@ -417,8 +422,8 @@ def create_app(test_config=None):
     # Companies.
     #----------------------------------------------------------------------------#
 
-    @app.route('/companies', methods=['GET'])
-    @app.route('/api/companies', methods=['GET'])
+    @ app.route('/companies', methods=['GET'])
+    @ app.route('/api/companies', methods=['GET'])
     def companies():
         # access database
         companies = [{
@@ -437,8 +442,8 @@ def create_app(test_config=None):
 
         return render_template('pages/companies.html', companies=companies)
 
-    @app.route('/companies/search', methods=['GET'])
-    @app.route('/api/companies/search', methods=['GET'])
+    @ app.route('/companies/search', methods=['GET'])
+    @ app.route('/api/companies/search', methods=['GET'])
     def search_companies():
         error = False
         # access database
@@ -492,8 +497,8 @@ def create_app(test_config=None):
                 response=response,
                 search_term=search_term)
 
-    @app.route('/companies/<int:company_id>', methods=['GET'])
-    @app.route('/api/companies/<int:company_id>', methods=['GET'])
+    @ app.route('/companies/<int:company_id>', methods=['GET'])
+    @ app.route('/api/companies/<int:company_id>', methods=['GET'])
     def show_company(company_id):
         error = False
         # access database
@@ -529,9 +534,9 @@ def create_app(test_config=None):
     # Create Companies.
     #----------------------------------------------------------------------------#
 
-    @app.route('/companies/create', methods=['GET'])
-    @app.route('/api/companies/create', methods=['GET'])
-    @requires_auth('get:company')
+    @ app.route('/companies/create', methods=['GET'])
+    @ app.route('/api/companies/create', methods=['GET'])
+    @ requires_auth('get:company')
     def create_company_from(jwt):
         form = CompanyForm()
         if request.path == '/api/companies/create':
@@ -540,9 +545,9 @@ def create_app(test_config=None):
             }), 200
         return render_template('forms/new_company.html', form=form)
 
-    @app.route('/companies/create', methods=['POST'])
-    @app.route('/api/companies/create', methods=['POST'])
-    @requires_auth('post:company')
+    @ app.route('/companies/create', methods=['POST'])
+    @ app.route('/api/companies/create', methods=['POST'])
+    @ requires_auth('post:company')
     def create_company_submission(jwt):
         error = False
         # add to db
@@ -590,9 +595,9 @@ def create_app(test_config=None):
     # Edit Companies.
     #----------------------------------------------------------------------------#
 
-    @app.route('/companies/<int:company_id>/edit', methods=['GET'])
-    @app.route('/api/companies/<int:company_id>/edit', methods=['GET'])
-    @requires_auth('get:company')
+    @ app.route('/companies/<int:company_id>/edit', methods=['GET'])
+    @ app.route('/api/companies/<int:company_id>/edit', methods=['GET'])
+    @ requires_auth('get:company')
     def edit_company(jwt, company_id):
         # get company based on id
         company = Company.query.filter_by(id=company_id).first_or_404()
@@ -619,9 +624,9 @@ def create_app(test_config=None):
             form=form,
             company=company)
 
-    @app.route('/companies/<int:company_id>/edit', methods=['PATCH'])
-    @app.route('/api/companies/<int:company_id>/edit', methods=['PATCH'])
-    @requires_auth('patch:company')
+    @ app.route('/companies/<int:company_id>/edit', methods=['PATCH'])
+    @ app.route('/api/companies/<int:company_id>/edit', methods=['PATCH'])
+    @ requires_auth('patch:company')
     def edit_company_submission(jwt, company_id):
         error = False
         # get product we want to edit
@@ -666,9 +671,9 @@ def create_app(test_config=None):
     # Delete Companies.
     #----------------------------------------------------------------------------#
 
-    @app.route('/companies/<int:company_id>/delete', methods=['DELETE'])
-    @app.route('/api/companies/<int:company_id>/delete', methods=['DELETE'])
-    @requires_auth('delete:company')
+    @ app.route('/companies/<int:company_id>/delete', methods=['DELETE'])
+    @ app.route('/api/companies/<int:company_id>/delete', methods=['DELETE'])
+    @ requires_auth('delete:company')
     def delete_company(jwt, company_id):
         error = False
         print('getting company')
@@ -722,7 +727,7 @@ def create_app(test_config=None):
     # def server_error(error):
     #     return render_template('errors/500.html'), 500
 
-    @app.errorhandler(400)
+    @ app.errorhandler(400)
     def unauthorized(error):
         return jsonify({
             "success": False,
@@ -730,7 +735,7 @@ def create_app(test_config=None):
             "message": "bad request"
         }), 400
 
-    @app.errorhandler(401)
+    @ app.errorhandler(401)
     def unauthorized(error):
         return jsonify({
             "success": False,
@@ -738,13 +743,13 @@ def create_app(test_config=None):
             "message": "unauthorized"
         }), 401
 
-    @app.errorhandler(AuthError)
+    @ app.errorhandler(AuthError)
     def authentification_failure(error):
         return jsonify({
             "success": False
         }), 401
 
-    @app.errorhandler(403)
+    @ app.errorhandler(403)
     def unprocessable(error):
         return jsonify({
             "success": False,
@@ -752,7 +757,7 @@ def create_app(test_config=None):
             "message": "forbidden"
         }), 403
 
-    @app.errorhandler(404)
+    @ app.errorhandler(404)
     def notfound(error):
         return jsonify({
             "success": False,
@@ -760,7 +765,7 @@ def create_app(test_config=None):
             "message": "resource not found"
         }), 404
 
-    @app.errorhandler(405)
+    @ app.errorhandler(405)
     def notfound(error):
         return jsonify({
             "success": False,
@@ -768,7 +773,7 @@ def create_app(test_config=None):
             "message": "method not allowed"
         }), 405
 
-    @app.errorhandler(500)
+    @ app.errorhandler(500)
     def notfound(error):
         return jsonify({
             "success": False,
