@@ -21,6 +21,7 @@ class Config(object):
 
     # SESSION_COOKIE_SECURE = True
 
+
 class ProductionConfig(Config):
     pass
 
@@ -33,7 +34,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     # set secret key
     SECRET_KEY = "testing_secret_key"
-    
+
     # TODO IMPLEMENT DATABASE URL
     # connect to db so we can use real data
     SQLALCHEMY_DATABASE_URI = 'postgresql://jaimeaznar@localhost:5432/capstone'
@@ -42,7 +43,7 @@ class DevelopmentConfig(Config):
 
     UPLOAD_FOLDER = 'static/img'
 
-    MAX_CONTENT_LENGTH = 5 * 1024 * 1024 # 5 MB
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
 
 
 class TestingConfig(Config):

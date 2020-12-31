@@ -8,13 +8,17 @@ from models import Company, Product
 
 
 class ProductForm(FlaskForm):
-    def get_company_choices():      
+    def get_company_choices():
         return Company.query
-        
+
     name = StringField('name', validators=[InputRequired()])
-    image = FileField('image', validators=[FileAllowed(['png', 'jpg','jpeg'], 'png,jpg or jpeg files only!')])
+    image = FileField('image', validators=[FileAllowed(
+        ['png', 'jpg', 'jpeg'], 'png,jpg or jpeg files only!')])
     description = StringField('description', validators=[InputRequired()])
-    company = QuerySelectField(query_factory=get_company_choices, validators=[InputRequired()],get_label='name')
+    company = QuerySelectField(
+        query_factory=get_company_choices, validators=[
+            InputRequired()], get_label='name')
+
 
 class CompanyForm(FlaskForm):
     name = StringField('name', validators=[InputRequired()])

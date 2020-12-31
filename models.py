@@ -39,7 +39,7 @@ class Company(db.Model):
         self.state = state
         self.address = address
         self.phone = phone
-    
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
@@ -50,8 +50,6 @@ class Company(db.Model):
 
     def update(self):
         db.session.commit()
-    
-
 
 
 class Product(db.Model):
@@ -60,18 +58,21 @@ class Product(db.Model):
     name = db.Column(db.String, nullable=False)
     image = db.Column(db.String(500), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    #relationship
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id', ondelete='CASCADE'))
+    # relationship
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            'company.id',
+            ondelete='CASCADE'))
 
     company = db.relationship("Company", back_populates="product")
-
 
     def __init__(self, name, image, description, company_id):
         self.name = name
         self.image = image
         self.description = description
         self.company_id = company_id
-    
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
@@ -82,4 +83,3 @@ class Product(db.Model):
 
     def update(self):
         db.session.commit()
-
