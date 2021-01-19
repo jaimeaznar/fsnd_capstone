@@ -188,7 +188,7 @@ def create_app(test_config=None):
     @app.route('/products/create', methods=['GET'])
     @app.route('/api/products/create', methods=['GET'])
     @requires_auth('get:product')
-    def create_product_form():
+    def create_product_form(jwt):
         # create a form object
         form = ProductForm()
         if request.path == '/api/products/create':
