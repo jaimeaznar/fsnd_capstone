@@ -2,7 +2,7 @@
 
 The API can be accessed at: https://fsnd-jaiazn-capstone-app.herokuapp.com
 
-REQUIRED HAS BEEN DISABLED SO AS TO REDUCE CALLS TO AUTHO WHEN TESTING.
+REQUIRED HAS BEEN DISABLED SO AS TO REDUCE CALLS TO AUTHO WHEN TESTING. 
 
 ## Testing and mock data
 

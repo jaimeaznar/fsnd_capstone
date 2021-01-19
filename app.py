@@ -187,7 +187,7 @@ def create_app(test_config=None):
 
     @app.route('/products/create', methods=['GET'])
     @app.route('/api/products/create', methods=['GET'])
-    # @requires_auth('get:product')
+    @requires_auth('get:product')
     def create_product_form():
         # create a form object
         form = ProductForm()
@@ -204,7 +204,7 @@ def create_app(test_config=None):
 
     @app.route('/products/create', methods=['POST'])
     @app.route('/api/products/create', methods=['POST'])
-    # @requires_auth('post:product')
+    @requires_auth('post:product')
     def create_product_submission(jwt):
         error = False
         filename = request.files['image'].filename
@@ -292,7 +292,7 @@ def create_app(test_config=None):
 
     @app.route('/products/<int:product_id>/edit', methods=['GET'])
     @app.route('/api/products/<int:product_id>/edit', methods=['GET'])
-    # @requires_auth('get:product')
+    @requires_auth('get:product')
     def edit_product_form(jwt, product_id):
         # get the product we want to modify
         product = Product.query.filter_by(id=product_id).first_or_404()
@@ -314,7 +314,7 @@ def create_app(test_config=None):
 
     @app.route('/products/<int:product_id>/edit', methods=['PATCH'])
     @app.route('/api/products/<int:product_id>/edit', methods=['PATCH'])
-    # @requires_auth('patch:product')
+    @requires_auth('patch:product')
     def edit_product_submission(jwt, product_id):
         error = False
         # get product we want to edit
@@ -380,7 +380,7 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
     @app.route('/products/<int:product_id>/delete', methods=['DELETE'])
     @app.route('/api/products/<int:product_id>/delete', methods=['DELETE'])
-    # @requires_auth('delete:product')
+    @requires_auth('delete:product')
     def delete_product(jwt, product_id):
         error = False
         product = Product.query.filter_by(id=product_id).first_or_404()
@@ -536,7 +536,7 @@ def create_app(test_config=None):
 
     @app.route('/companies/create', methods=['GET'])
     @app.route('/api/companies/create', methods=['GET'])
-    # @requires_auth('get:company')
+    @requires_auth('get:company')
     def create_company_from(jwt):
         form = CompanyForm()
         if request.path == '/api/companies/create':
@@ -547,7 +547,7 @@ def create_app(test_config=None):
 
     @app.route('/companies/create', methods=['POST'])
     @app.route('/api/companies/create', methods=['POST'])
-    # @requires_auth('post:company')
+    @requires_auth('post:company')
     def create_company_submission(jwt):
         error = False
         # add to db
@@ -597,7 +597,7 @@ def create_app(test_config=None):
 
     @app.route('/companies/<int:company_id>/edit', methods=['GET'])
     @app.route('/api/companies/<int:company_id>/edit', methods=['GET'])
-    # @requires_auth('get:company')
+    @requires_auth('get:company')
     def edit_company(jwt, company_id):
         # get company based on id
         company = Company.query.filter_by(id=company_id).first_or_404()
@@ -626,7 +626,7 @@ def create_app(test_config=None):
 
     @app.route('/companies/<int:company_id>/edit', methods=['PATCH'])
     @app.route('/api/companies/<int:company_id>/edit', methods=['PATCH'])
-    # @requires_auth('patch:company')
+    @requires_auth('patch:company')
     def edit_company_submission(jwt, company_id):
         error = False
         # get product we want to edit
@@ -673,7 +673,7 @@ def create_app(test_config=None):
 
     @app.route('/companies/<int:company_id>/delete', methods=['DELETE'])
     @app.route('/api/companies/<int:company_id>/delete', methods=['DELETE'])
-    # @requires_auth('delete:company')
+    @requires_auth('delete:company')
     def delete_company(jwt, company_id):
         error = False
         print('getting company')
