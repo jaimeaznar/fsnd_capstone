@@ -73,8 +73,10 @@ class CapstoneTestCase(unittest.TestCase):
     # Test search product by name
     def test_search_product(self):
         print('test_search_product')
-        response = self.client().get('/api/products/search',
-                                     query_string=dict(search_term='test product'))
+        response = self.client().get(
+            '/api/products/search',
+            query_string=dict(
+                search_term='test product'))
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -112,8 +114,10 @@ class CapstoneTestCase(unittest.TestCase):
     # Test search product by name
     def test_search_company(self):
 
-        response = self.client().get('/api/companies/search',
-                                     query_string=dict(search_term='test company'))
+        response = self.client().get(
+            '/api/companies/search',
+            query_string=dict(
+                search_term='test company'))
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -144,9 +148,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_form_create_company(self):
         response = self.client().get('/api/companies/create',
-                                     headers={
-                                         'Authorization': 'Bearer ' + JWT_TOKEN}
-                                     )
+                                     headers={'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -154,16 +156,16 @@ class CapstoneTestCase(unittest.TestCase):
 
     # Create company post
     def test_create_company(self):
-        response = self.client().post('/api/companies/create',
-                                      data=dict(
-                                          name='test name',
-                                          city='test city',
-                                          state='test state',
-                                          address='test address',
-                                          phone='phone'),
-                                      headers={
-                                          'Authorization': 'Bearer ' + JWT_TOKEN
-                                      })
+        response = self.client().post(
+            '/api/companies/create',
+            data=dict(
+                name='test name',
+                city='test city',
+                state='test state',
+                address='test address',
+                phone='phone'),
+            headers={
+                'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -173,14 +175,13 @@ class CapstoneTestCase(unittest.TestCase):
    # Create company post incomplete info
     def test_create_company_with_incomplete_data(self):
 
-        response = self.client().post('/api/companies/create',
-                                      data=dict(
-                                          name='test name',
-                                          city='test city'
-                                      ),
-                                      headers={
-                                          'Authorization': 'Bearer ' + JWT_TOKEN
-                                      })
+        response = self.client().post(
+            '/api/companies/create',
+            data=dict(
+                name='test name',
+                city='test city'),
+            headers={
+                'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 400)
@@ -210,9 +211,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_form_create_product(self):
         response = self.client().get('/api/products/create',
-                                     headers={
-                                         'Authorization': 'Bearer ' + JWT_TOKEN}
-                                     )
+                                     headers={'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -223,18 +222,16 @@ class CapstoneTestCase(unittest.TestCase):
         path_img = 'static/img/tomahawk.jpg'
         with open(path_img, 'rb') as img:
 
-            response = self.client().post('/api/products/create',
-                                          data=dict(
-                                              name='test name',
-                                              image=img,
-                                              description='test description',
-                                              company=self.company.id,
-
-                                          ),
-
-                                          headers={
-                                              'Authorization': 'Bearer ' + JWT_TOKEN
-                                          })
+            response = self.client().post(
+                '/api/products/create',
+                data=dict(
+                    name='test name',
+                    image=img,
+                    description='test description',
+                    company=self.company.id,
+                ),
+                headers={
+                    'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -247,9 +244,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_form_patch_company(self):
         # Create company get form
         response = self.client().get('/api/companies/1/edit',
-                                     headers={
-                                         'Authorization': 'Bearer ' + JWT_TOKEN}
-                                     )
+                                     headers={'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -257,16 +252,16 @@ class CapstoneTestCase(unittest.TestCase):
 
     # Patch company post
     def test_patch_company(self):
-        response = self.client().patch('/api/companies/1/edit',
-                                       data=dict(
-                                           name='patch name',
-                                           city='patch city',
-                                           state='patch state',
-                                           address='patch address',
-                                           phone='patch phone'),
-                                       headers={
-                                           'Authorization': 'Bearer ' + JWT_TOKEN
-                                       })
+        response = self.client().patch(
+            '/api/companies/1/edit',
+            data=dict(
+                name='patch name',
+                city='patch city',
+                state='patch state',
+                address='patch address',
+                phone='patch phone'),
+            headers={
+                'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -291,10 +286,10 @@ class CapstoneTestCase(unittest.TestCase):
 
     # Delete company
     def test_delete_company(self):
-        response = self.client().delete('/api/companies/1/delete',
-                                        headers={
-                                            'Authorization': 'Bearer ' + JWT_TOKEN
-                                        })
+        response = self.client().delete(
+            '/api/companies/1/delete',
+            headers={
+                'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -302,10 +297,10 @@ class CapstoneTestCase(unittest.TestCase):
 
     # Delete with invalid id
     def test_delete_company_with_invalid_id(self):
-        response = self.client().delete('/api/companies/100/delete',
-                                        headers={
-                                            'Authorization': 'Bearer ' + JWT_TOKEN
-                                        })
+        response = self.client().delete(
+            '/api/companies/100/delete',
+            headers={
+                'Authorization': 'Bearer ' + JWT_TOKEN})
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)

@@ -38,7 +38,8 @@ class DevelopmentConfig(Config):
     # TODO IMPLEMENT DATABASE URL
     # connect to db so we can use real data
     SQLALCHEMY_DATABASE_URI = 'postgresql://jaimeaznar@localhost:5432/capstone'
-    # If set to True, Flask-SQLAlchemy will track modifications of objects and emit signals.
+    # If set to True, Flask-SQLAlchemy will track modifications of objects and
+    # emit signals.
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     UPLOAD_FOLDER = 'static/img'
