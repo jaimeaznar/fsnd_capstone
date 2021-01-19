@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import db, setup_db, Company, Product
 from forms import *
-jwt_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InQ3N2JJcTR6OUtwcVQ1QXYyaWlZdCJ9.eyJpc3MiOiJodHRwczovL2phaWF6bi5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWYyMDZjMGM2ODAzM2YwMDNkNWRjMjdhIiwiYXVkIjoiY2Fwc3RvbmVfYXBpIiwiaWF0IjoxNjExMDYzNzc3LCJleHAiOjE2MTExNTAxNzcsImF6cCI6ImlLMVpXeG95SmlPTG1CdHlkNXU0WVhtdHR4S08yTGNSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6Y29tcGFueSIsImRlbGV0ZTpwcm9kdWN0IiwiZ2V0OmNvbXBhbnkiLCJnZXQ6cHJvZHVjdCIsInBhdGNoOmNvbXBhbnkiLCJwYXRjaDpwcm9kdWN0IiwicG9zdDpjb21wYW55IiwicG9zdDpwcm9kdWN0Il19.498KyF_qeMYs6vYRRU3RfmIBftU0Gfs0FYUvAm6DVGAR68eofd49qEgG09_UP6surAu4QFcOzdYws3SXCX8ZUaJeFKM-8qL40dnwOo3ox_1igz4GSjakJLOUeVvH5NQnY-aWzuW3zwcK4q8A7B9p2_OXoT7Tlb5ZbfOgGfNW5nY1noLqRw4_5mh1HiFU0vydTAeytwLpeUdBwU559goxZP8kSPZ2rjJxxFadhJ8IOBzzNl4FyG5HZNzv2fsr_uCPK23k45qiNfhlk7NJ0ZUJ2kZqGwPGZs7gca81vNCmtNeIzH45j6PYznl91u-CrJaMPA3QFIDkPt2elC5Z4R3IHA'
+JWT_TOKEN = os.environ["JWT_TOKEN"]
 
 
 class CapstoneTestCase(unittest.TestCase):
@@ -145,7 +145,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_form_create_company(self):
         response = self.client().get('/api/companies/create',
                                      headers={
-                                         'Authorization': 'Bearer ' + jwt_token}
+                                         'Authorization': 'Bearer ' + JWT_TOKEN}
                                      )
         data = json.loads(response.data)
 
@@ -162,7 +162,7 @@ class CapstoneTestCase(unittest.TestCase):
                                           address='test address',
                                           phone='phone'),
                                       headers={
-                                          'Authorization': 'Bearer ' + jwt_token
+                                          'Authorization': 'Bearer ' + JWT_TOKEN
                                       })
         data = json.loads(response.data)
 
@@ -179,7 +179,7 @@ class CapstoneTestCase(unittest.TestCase):
                                           city='test city'
                                       ),
                                       headers={
-                                          'Authorization': 'Bearer ' + jwt_token
+                                          'Authorization': 'Bearer ' + JWT_TOKEN
                                       })
         data = json.loads(response.data)
 
@@ -211,7 +211,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_form_create_product(self):
         response = self.client().get('/api/products/create',
                                      headers={
-                                         'Authorization': 'Bearer ' + jwt_token}
+                                         'Authorization': 'Bearer ' + JWT_TOKEN}
                                      )
         data = json.loads(response.data)
 
@@ -233,7 +233,7 @@ class CapstoneTestCase(unittest.TestCase):
                                           ),
 
                                           headers={
-                                              'Authorization': 'Bearer ' + jwt_token
+                                              'Authorization': 'Bearer ' + JWT_TOKEN
                                           })
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
@@ -248,7 +248,7 @@ class CapstoneTestCase(unittest.TestCase):
         # Create company get form
         response = self.client().get('/api/companies/1/edit',
                                      headers={
-                                         'Authorization': 'Bearer ' + jwt_token}
+                                         'Authorization': 'Bearer ' + JWT_TOKEN}
                                      )
         data = json.loads(response.data)
 
@@ -265,7 +265,7 @@ class CapstoneTestCase(unittest.TestCase):
                                            address='patch address',
                                            phone='patch phone'),
                                        headers={
-                                           'Authorization': 'Bearer ' + jwt_token
+                                           'Authorization': 'Bearer ' + JWT_TOKEN
                                        })
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
@@ -293,7 +293,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_delete_company(self):
         response = self.client().delete('/api/companies/1/delete',
                                         headers={
-                                            'Authorization': 'Bearer ' + jwt_token
+                                            'Authorization': 'Bearer ' + JWT_TOKEN
                                         })
         data = json.loads(response.data)
 
@@ -304,7 +304,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_delete_company_with_invalid_id(self):
         response = self.client().delete('/api/companies/100/delete',
                                         headers={
-                                            'Authorization': 'Bearer ' + jwt_token
+                                            'Authorization': 'Bearer ' + JWT_TOKEN
                                         })
         data = json.loads(response.data)
 

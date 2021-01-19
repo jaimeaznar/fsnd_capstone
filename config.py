@@ -33,7 +33,7 @@ class DevelopmentConfig(Config):
     # Enable debugging mode
     DEBUG = True
     # set secret key
-    SECRET_KEY = "testing_secret_key"
+    SECRET_KEY = os.environ["SECRET_KEY"]
 
     # TODO IMPLEMENT DATABASE URL
     # connect to db so we can use real data

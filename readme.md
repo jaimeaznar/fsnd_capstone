@@ -7,6 +7,10 @@ This is the final project for the Udacity Full Stack Nanodegree. This project co
 
 Currently there is no frontend besides the html templates
 
+## Motivation
+
+As part of my journey of becoming a SWE and FullStack developer I have taken it upon myself to improve our family business infrastructure and digital/online presence. This is part of a personal project to develop a website for our family business. It is time we increase our online presence!!
+
 
 
 ## Installing Dependencies
