@@ -12,8 +12,8 @@
     {% block content %}
     {% for product in products %}
     <h3>{{product['name']}}</h3>
-    <p>{{product['product_description']}}</p>
-    <img src="{{product['image_link']}}" alt="">
+    <p>{{product['description']}}</p>
+    <img src="{{product['image']}}" alt="">
     {% endfor %}
     {%endblock%}
 </body>
