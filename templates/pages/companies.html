@@ -1,24 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layouts/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
-</head>
 
-<body>
-    <h1>This is the Companies Page</h1>
-    {% block content %}
-    {% for company in companies %}
-    <h3>{{company['name']}}</h3>
-    <p>{{company['city']}}</p>
-    <p>{{company['state']}}</p>
-    <p>{{company['address']}}</p>
-    <p>{{company['phone']}}</p>
 
-    {% endfor %}
-    {%endblock%}
-</body>
+{% block title %}
+{{title}}
+{% endblock title %}
 
-</html>
+
+{% block content %}
+
+
+{% for company in companies %}
+<h3>{{company['name']}}</h3>
+<p>{{company['city']}}</p>
+<p>{{company['state']}}</p>
+<p>{{company['address']}}</p>
+<p>{{company['phone']}}</p>
+
+{% endfor %}
+
+
+{% endblock content %}

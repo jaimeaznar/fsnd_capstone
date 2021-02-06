@@ -1,30 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layouts/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
-<body>
-    <h1>Show company page</h1>
 
-    {% block content %}
-    <div class="row">
-        <div class="col-sm-6">
-            <h1 class="monospace">
-                company id and name: {{ data.id }} | {{ data.name}}
-            </h1>
-            <p class="subtitle">
-                city: {{ data.city}}
-                state: {{data.state}}
-                address: {{data.address}}
-                phone: {{data.phone}}
-            </p>
-        </div>
+{% block title %}
+Companies
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-6">
+        <h1 class="monospace">
+            company id and name: {{ data.id }} | {{ data.name}}
+        </h1>
+        <p class="subtitle">
+            city: {{ data.city}}
+            state: {{data.state}}
+            address: {{data.address}}
+            phone: {{data.phone}}
+        </p>
     </div>
-    {% endblock %}
-</body>
+</div>
 
-</html>
+{% endblock content %}

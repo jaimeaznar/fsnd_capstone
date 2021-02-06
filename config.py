@@ -42,7 +42,7 @@ class DevelopmentConfig(Config):
     # emit signals.
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    UPLOAD_FOLDER = 'static/img'
+    UPLOAD_FOLDER = 'static/img/products'
 
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
 

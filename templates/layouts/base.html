@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="../../favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="../../favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="../../favicon/favicon-16x16.png">
+    <link rel="manifest" href="../../favicon/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-config" content="favicon/browserconfig.xml">
+
+    <title>
+        {% block title %}
+
+        {% endblock title %}
+        | Longfields | Irish meat</title>
+
+
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="../../static/css/theme.min.css">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/6bbd5075ba.js"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR
+	================================================== -->
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top">
+        <div class="container">
+
+            <!-- Navbar: Brand -->
+            <img class="navbar-brand d-lg-none" srcset="
+            ../../static/img/logo/logo_50.webp 50w,
+            ../../static/img/logo/logo_243.webp 243w"
+                sizes="(max-width: 1480px) 40vw, 1480px"
+                src="../../static/img/logo/logo_243.webp"
+                style="max-width: 75px;" alt="Brand" id="logo">
+
+
+
+            <!-- <a class="navbar-brand d-lg-none" href="index.html">Touché</a> -->
+
+            <!-- Navbar: Toggler -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar: Collapse -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <!-- Navbar navigation: Left -->
+                <ul class="navbar-nav social mr-auto">
+                    <li><i class="fab fa-facebook-f fa-xs"></i></li>
+                    <li><i class="fab fa-instagram fa-sm"></i></li>
+                    <li><i class="fab fa-linkedin-in fa-sm"></i></li>
+                </ul>
+
+                <!-- Navbar: Brand -->
+                <a href="{{url_for('index')}}">
+                    <img class="navbar-brand d-none d-lg-flex"
+                        sizes="(max-width: 1480px) 40vw, 1480px" srcset="
+                        ../../static/img/logo/logo_50.webp 50w,
+                        ../../static/img/logo/logo_243.webp 243w
+                    " src="../../static/img/logo/logo.png"
+                        style="max-width: 150px;" alt="Brand" id="logo"></a>
+                <!-- <a class="navbar-brand d-none d-lg-flex" href="index.html">
+                    Touché
+                </a> -->
+
+                <!-- Navbar navigation: Right -->
+                <ul class="navbar-nav ml-auto">
+                    <li
+                        class="nav-item {% if request.endpoint=='about' %} active {% endif %} ">
+                        <a class="nav-link"
+                            href="{{url_for('about')}}">About</a>
+                    </li>
+                    <li
+                        class="nav-item {% if request.endpoint=='products' %} active {% endif %}">
+                        <a class="nav-link"
+                            href="{{url_for('products')}}">Products</a>
+                    </li>
+                    <li
+                        class="nav-item {% if request.endpoint=='blog' %} active {% endif %}">
+                        <a class="nav-link" href="{{url_for('blog')}}">Blog</a>
+                    </li>
+                    <li
+                        class="nav-item {% if request.endpoint=='contact' %} active {% endif %}">
+                        <a class="nav-link"
+                            href="{{url_for('contact')}}">Contact</a>
+                    </li>
+                </ul>
+
+            </div>
+            <!-- / .navbar-collapse -->
+
+        </div>
+        <!-- / .container -->
+    </nav>
+    <!-- / .navbar -->
+
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-block alert-info fade in">
+        <a class="close" data-dismiss="alert">&times;</a>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+
+    <!-- FOOTER
+	================================================== -->
+    <footer class="section section_footer">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-4">
+
+                    <!-- About Us -->
+                    <h5 class="section_footer__heading">
+                        About Us
+                    </h5>
+                    <p>
+                        All the meat selected to carry this logo is primarily
+                        grass meat bathed by the Atlantic breezes that gives it
+                        a unique texture and bouquet.
+                    </p>
+
+                </div>
+                <div class="col-sm-4">
+
+                    <!-- Contact info -->
+                    <h5 class="section_footer__heading">
+                        Contact info
+                    </h5>
+                    <ul class="section_footer__info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i> Calle
+                            Carretera de Galapagar 37, 1A. 28250, Torrelodones,
+                            Madrid.
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i> +34 918 518 492
+                        </li>
+                        <li>
+                            <i class="far fa-envelope"></i> <a
+                                href="mailto:admin@domain.com">global@globalmeats.es</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-sm-4">
+
+                    <!-- Opening hours -->
+                    <h5 class="section_footer__heading">
+                        Opening hours
+                    </h5>
+                    <div class="section_footer__open">
+                        <div class="section_footer__open__days">Monday -
+                            Viernes</div>
+                        <div class="section_footer__open__time">08:00 AM - 06:00
+                            PM</div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- / .row -->
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Copyright -->
+                    <div class="section_footer__copyright">
+                        &copy; <span id="js-current-year"></span> Longfields.
+                        All
+                        rights reserved.
+                    </div>
+
+                </div>
+            </div>
+            <!-- / .row -->
+
+        </div>
+        <!-- / .container -->
+    </footer>
+
+    <!-- JAVASCRIPT
+	================================================== -->
+
+    <!-- JS Global -->
+    <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAz2DOymsdUV3hWvJ61yVOwvuKjt1YXgn4"></script>
+
+    <!-- JS Plugins -->
+    <script src="../../static/plugins/parallax/parallax.min.js"></script>
+
+    <!-- JS Custom -->
+    <script src="../../static/js/theme.min.js"></script>
+
+
+</body>
+
+</html>

@@ -20,7 +20,7 @@ from forms import *
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 
 def create_app(test_config=None):
@@ -57,14 +57,32 @@ def create_app(test_config=None):
 
     @app.route('/', methods=['GET'])
     def index():
-        return render_template('pages/home.html')
+        return render_template('pages/index.html', title="Home")
+
+    # TODO
+    # newsletter form
+
+    @app.route('/about', methods=['GET'])
+    def about():
+        return render_template('pages/about.html', title="About Us")
+
+    @app.route('/contact', methods=['GET'])
+    def contact():
+        return render_template('pages/contact.html', title="Contact Us")
+
+    @app.route('/blog', methods=['GET'])
+    def blog():
+        return render_template('pages/blog.html', title="Our Blog")
+
+    # TODO
+    # contact form
 
     #----------------------------------------------------------------------------#
     # Products.
     #----------------------------------------------------------------------------#
 
     @app.route('/products', methods=['GET'])
-    @app.route('/api/products', methods=['GET'])
+    # @app.route('api/products', methods=['GET'])
     def products():
         error = False
         # we create a product list which we will pass on to the html
@@ -72,7 +90,8 @@ def create_app(test_config=None):
         # access the db
         try:
             for product in Product.query.all():
-                product_dict = {'name': product.name,
+                product_dict = {'id': product.id,
+                                'name': product.name,
                                 'image': product.image,
                                 'description': product.description
                                 }
@@ -91,10 +110,10 @@ def create_app(test_config=None):
                     'success': True,
                     'products': products
                 }), 200
-            return render_template('pages/products.html', products=products)
+            return render_template('pages/products.html', title="Our Products", products=products)
 
     @app.route('/products/search', methods=['GET'])
-    @app.route('/api/products/search', methods=['GET'])
+    # @app.route('api/products/search', methods=['GET'])
     def search_products():
         error = False
         # access database
@@ -150,7 +169,7 @@ def create_app(test_config=None):
                 search_term=search_term)
 
     @app.route('/products/<int:product_id>', methods=['GET'])
-    @app.route('/api/products/<int:product_id>', methods=['GET'])
+    # @app.route('api/products/<int:product_id>', methods=['GET'])
     def show_product(product_id):
         error = False
         # access database
@@ -179,16 +198,16 @@ def create_app(test_config=None):
                     'success': True,
                     'data': data,
                 }), 200
-            return render_template('pages/show_product.html', product=data)
+            return render_template('pages/show_product.html', title=data['name'], product=data)
 
     #----------------------------------------------------------------------------#
     # Create products.
     #----------------------------------------------------------------------------#
 
     @app.route('/products/create', methods=['GET'])
-    @app.route('/api/products/create', methods=['GET'])
-    @requires_auth('get:product')
-    def create_product_form(jwt):
+    # @app.route('api/products/create', methods=['GET'])
+    # @requires_auth('get:product')
+    def create_product_form():
         # create a form object
         form = ProductForm()
         if request.path == '/api/products/create':
@@ -203,9 +222,9 @@ def create_app(test_config=None):
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
     @app.route('/products/create', methods=['POST'])
-    @app.route('/api/products/create', methods=['POST'])
-    @requires_auth('post:product')
-    def create_product_submission(jwt):
+    # @app.route('api/products/create', methods=['POST'])
+    # @requires_auth('post:product')
+    def create_product_submission():
         error = False
         filename = request.files['image'].filename
         print(filename)
@@ -215,7 +234,7 @@ def create_app(test_config=None):
             # create product object with form data
             new_product = Product(
                 name=request.form.get('name'),
-                image=app.config['UPLOAD_FOLDER'] + "/" + filename,
+                image=app.config['UPLOAD_FOLDER'] + "/" + name + filename,
                 description=request.form.get('description'),
                 company_id=request.form.get('company')
             )
@@ -291,9 +310,9 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
 
     @app.route('/products/<int:product_id>/edit', methods=['GET'])
-    @app.route('/api/products/<int:product_id>/edit', methods=['GET'])
-    @requires_auth('get:product')
-    def edit_product_form(jwt, product_id):
+    # @app.route('api/products/<int:product_id>/edit', methods=['GET'])
+    # @requires_auth('get:product')
+    def edit_product_form(product_id):
         # get the product we want to modify
         product = Product.query.filter_by(id=product_id).first_or_404()
         # Show info on form
@@ -313,9 +332,9 @@ def create_app(test_config=None):
             form=form)
 
     @app.route('/products/<int:product_id>/edit', methods=['PATCH'])
-    @app.route('/api/products/<int:product_id>/edit', methods=['PATCH'])
-    @requires_auth('patch:product')
-    def edit_product_submission(jwt, product_id):
+    # @app.route('api/products/<int:product_id>/edit', methods=['PATCH'])
+    # @requires_auth('patch:product')
+    def edit_product_submission(product_id):
         error = False
         # get product we want to edit
         product = Product.query.filter_by(id=product_id).first_or_404()
@@ -379,9 +398,9 @@ def create_app(test_config=None):
     # Delete products.
     #----------------------------------------------------------------------------#
     @app.route('/products/<int:product_id>/delete', methods=['DELETE'])
-    @app.route('/api/products/<int:product_id>/delete', methods=['DELETE'])
-    @requires_auth('delete:product')
-    def delete_product(jwt, product_id):
+    # @app.route('api/products/<int:product_id>/delete', methods=['DELETE'])
+    # @requires_auth('delete:product')
+    def delete_product(product_id):
         error = False
         product = Product.query.filter_by(id=product_id).first_or_404()
 
@@ -423,7 +442,7 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
 
     @app.route('/companies', methods=['GET'])
-    @app.route('/api/companies', methods=['GET'])
+    # @app.route('api/companies', methods=['GET'])
     def companies():
         # access database
         companies = [{
@@ -440,10 +459,10 @@ def create_app(test_config=None):
                 'companies': companies,
             }), 200
 
-        return render_template('pages/companies.html', companies=companies)
+        return render_template('pages/companies.html', title="Companies", companies=companies)
 
     @app.route('/companies/search', methods=['GET'])
-    @app.route('/api/companies/search', methods=['GET'])
+    # @app.route('api/companies/search', methods=['GET'])
     def search_companies():
         error = False
         # access database
@@ -498,7 +517,7 @@ def create_app(test_config=None):
                 search_term=search_term)
 
     @app.route('/companies/<int:company_id>', methods=['GET'])
-    @app.route('/api/companies/<int:company_id>', methods=['GET'])
+    # @app.route('api/companies/<int:company_id>', methods=['GET'])
     def show_company(company_id):
         error = False
         # access database
@@ -535,9 +554,9 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
 
     @app.route('/companies/create', methods=['GET'])
-    @app.route('/api/companies/create', methods=['GET'])
-    @requires_auth('get:company')
-    def create_company_from(jwt):
+    # @app.route('api/companies/create', methods=['GET'])
+    # @requires_auth('get:company')
+    def create_company_from():
         form = CompanyForm()
         if request.path == '/api/companies/create':
             return jsonify({
@@ -546,9 +565,9 @@ def create_app(test_config=None):
         return render_template('forms/new_company.html', form=form)
 
     @app.route('/companies/create', methods=['POST'])
-    @app.route('/api/companies/create', methods=['POST'])
-    @requires_auth('post:company')
-    def create_company_submission(jwt):
+    # @app.route('api/companies/create', methods=['POST'])
+    # @requires_auth('post:company')
+    def create_company_submission():
         error = False
         # add to db
         try:
@@ -596,9 +615,9 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
 
     @app.route('/companies/<int:company_id>/edit', methods=['GET'])
-    @app.route('/api/companies/<int:company_id>/edit', methods=['GET'])
-    @requires_auth('get:company')
-    def edit_company(jwt, company_id):
+    # @app.route('api/companies/<int:company_id>/edit', methods=['GET'])
+    # @requires_auth('get:company')
+    def edit_company(company_id):
         # get company based on id
         company = Company.query.filter_by(id=company_id).first_or_404()
         form = CompanyForm(
@@ -625,9 +644,9 @@ def create_app(test_config=None):
             company=company)
 
     @app.route('/companies/<int:company_id>/edit', methods=['PATCH'])
-    @app.route('/api/companies/<int:company_id>/edit', methods=['PATCH'])
-    @requires_auth('patch:company')
-    def edit_company_submission(jwt, company_id):
+    # @app.route('api/companies/<int:company_id>/edit', methods=['PATCH'])
+    # @requires_auth('patch:company')
+    def edit_company_submission(company_id):
         error = False
         # get product we want to edit
         company = Company.query.filter_by(id=company_id).first_or_404()
@@ -672,9 +691,9 @@ def create_app(test_config=None):
     #----------------------------------------------------------------------------#
 
     @app.route('/companies/<int:company_id>/delete', methods=['DELETE'])
-    @app.route('/api/companies/<int:company_id>/delete', methods=['DELETE'])
-    @requires_auth('delete:company')
-    def delete_company(jwt, company_id):
+    # @app.route('api/companies/<int:company_id>/delete', methods=['DELETE'])
+    # @requires_auth('delete:company')
+    def delete_company(company_id):
         error = False
         print('getting company')
         company = Company.query.filter_by(id=company_id).first_or_404()

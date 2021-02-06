@@ -1,28 +1,302 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layouts/base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
-<body>
-    <h1>Show product page</h1>
+{% block title %}
+{{product.name}}
+{% endblock title %}
 
-    {% block content %}
-    <div class="row">
-        <div class="col-sm-6">
-            <h1 class="monospace">
-                product id and name: {{ product.id }} | {{ product.name}}
-            </h1>
-            <p class="subtitle">
-                description: {{ product.product_description}}
-            </p>
-            <img src="../../{{product.image_link}}" alt="">
-        </div>
-    </div>
-    {% endblock %}
-</body>
 
-</html>
+{% block content %}
+
+{% include 'layouts/header.html' %}
+
+
+<!-- ITEM
+    ================================================== -->
+<section class="section pb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4 order-md-2">
+
+                <!-- Preheading -->
+                <h1 class="mb-1">
+                    {{product['name']}}
+                </h1>
+                <!-- Heading -->
+                <h5
+                    class="font-weight-medium text-xs text-uppercase text-primary">
+                    Vacuno
+                </h5>
+                <!-- Text -->
+                <p class="mb-5 text-muted">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                </p>
+
+                <!-- Button -->
+                <button class="btn btn-primary btn-green text-white mb-4">
+                    Descargar Ficha Técnica
+                </button>
+
+            </div>
+            <div class="col-12 col-md-8 order-md-1">
+
+                <!-- Image -->
+                <img src="../../{{product['image']}}" alt="..."
+                    class="img-fluid mb-5">
+
+                <!-- Nav -->
+                <nav class="nav nav-tabs mb-5">
+                    <a href="#itemDescription" class="nav-item nav-link active"
+                        data-toggle="tab">
+                        About
+                    </a>
+                    <a href="#itemShipping" class="nav-item nav-link"
+                        data-toggle="tab">
+                        Shipping
+                    </a>
+                    <a href="#itemReviews" class="nav-item nav-link"
+                        data-toggle="tab">
+                        Reviews
+                    </a>
+                </nav>
+
+                <!-- Content -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="itemDescription">
+
+                        <p class="text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Commodi architecto facere, in dolores modi
+                            nisi. Quos quibusdam neque, necessitatibus, sint
+                            modi maxime atque ex, et provident sequi natus
+                            cumque! Id!
+                        </p>
+
+                        <p class="text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Ratione minus nisi nihil officiis recusandae.
+                            Odio maxime illo repellat, alias earum veniam
+                            temporibus, officiis ullam a, recusandae quos
+                            necessitatibus mollitia consequatur.
+                        </p>
+
+                        <p class="mb-0 text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Nulla nobis, ratione veniam cum culpa!
+                            Reiciendis dolorem, provident minima expedita,
+                            quaerat accusantium culpa dolor quo. Nobis eius,
+                            libero iusto ea sapiente.
+                        </p>
+
+                    </div>
+                    <div class="tab-pane fade" id="itemShipping">
+
+                        <p class="text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Dicta iure vero labore sed recusandae
+                            perferendis iste quam suscipit asperiores quo ab,
+                            beatae perspiciatis aut numquam mollitia rem nobis
+                            aliquam voluptas.
+                        </p>
+
+                        <p class="text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. In repudiandae labore amet fuga architecto
+                            qui, eos nulla quam sed soluta error exercitationem
+                            non accusamus aliquam illum minima asperiores
+                            dolores cupiditate!
+                        </p>
+
+                        <p class="mb-0 text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Asperiores distinctio facere adipisci beatae
+                            nobis amet aperiam eius eaque culpa modi, quia,
+                            maiores obcaecati voluptate! Ipsam architecto
+                            asperiores, enim debitis pariatur?
+                        </p>
+
+                    </div>
+                    <div class="tab-pane fade" id="itemReviews">
+
+                        <!-- Comment -->
+                        <div class="row no-gutters mb-4">
+                            <div class="col-auto">
+
+                                <!-- Avatar -->
+                                <div class="avatar mr-3">
+                                    <img src="assets/img/18.jpg" alt="..."
+                                        class="img-cover">
+                                </div>
+
+                            </div>
+                            <div class="col">
+
+                                <!-- Meta -->
+                                <p class="mb-1 text-muted text-xs">
+                                    by <strong class="text-body">Jane
+                                        Roe</strong> 15 minutes ago
+                                </p>
+
+                                <!-- Rating -->
+                                <p class="mb-2 text-xs text-primary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </p>
+
+                                <!-- Text -->
+                                <p class="mb-0 text-sm">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Adipisci, animi? Hic
+                                    dignissimos laboriosam est molestiae dolore
+                                    voluptatum iusto.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <!-- Comment -->
+                        <div class="row no-gutters mb-4">
+                            <div class="col-auto">
+
+                                <!-- Avatar -->
+                                <div class="avatar mr-3">
+                                    <img src="assets/img/17.jpg" alt="..."
+                                        class="img-cover">
+                                </div>
+
+                            </div>
+                            <div class="col">
+
+                                <!-- Meta -->
+                                <p class="mb-1 text-muted text-xs">
+                                    by <strong class="text-body">Judy
+                                        Doe</strong> 17 minutes ago
+                                </p>
+
+                                <!-- Rating -->
+                                <p class="mb-2 text-xs text-primary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </p>
+
+                                <!-- Text -->
+                                <p class="mb-0 text-sm">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Adipisci, animi? Hic
+                                    dignissimos laboriosam est molestiae dolore
+                                    voluptatum iusto.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <!-- Comment -->
+                        <div class="row no-gutters mb-0">
+                            <div class="col-auto">
+
+                                <!-- Avatar -->
+                                <div class="avatar mr-3">
+                                    <img src="assets/img/16.jpg" alt="..."
+                                        class="img-cover">
+                                </div>
+
+                            </div>
+                            <div class="col">
+
+                                <!-- Meta -->
+                                <p class="mb-1 text-muted text-xs">
+                                    by <strong class="text-body">John
+                                        Doe</strong> 2 days ago ago
+                                </p>
+
+                                <!-- Rating -->
+                                <p class="mb-2 text-xs text-primary">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half"></i>
+                                </p>
+
+                                <!-- Text -->
+                                <p class="mb-0 text-sm">
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Adipisci, animi? Hic
+                                    dignissimos laboriosam est molestiae dolore
+                                    voluptatum iusto.
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</section>
+
+<!-- FEATURED
+      ================================================== -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <!-- Heading -->
+                <h3 class="mb-5">
+                    También te puede intersar:
+                </h3>
+
+            </div>
+        </div> <!-- / .row -->
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <!-- Item -->
+                <div class="position-relative">
+
+                    <!-- Card -->
+                    <a class="card border-0 mb-3 mb-md-0" href="#">
+
+                        <!-- Image -->
+                        <img src="../../{{product['image']}}" alt="..."
+                            class="card-img">
+
+                        <!-- Body -->
+                        <div class="card-body">
+
+                            <div class="row align-items-center mb-3">
+                                <div class="col">
+
+                                    <!-- Heading -->
+                                    <h4 class="card-title mb-0">
+                                        {{product['name']}}
+                                    </h4>
+
+                                </div>
+
+                            </div> <!-- / .row -->
+                        </div>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</section>
+
+{% include 'layouts/newsletter.html' %}
+
+
+
+{% endblock content %}
