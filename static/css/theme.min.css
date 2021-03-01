@@ -548,7 +548,7 @@ mark {
     width: 10rem;
     font-size: 1rem;
     background-color:rgb(32,115,73, 0.9);
-    background-image: url(../img/bg-waves.png);
+    background-image: url(static/img/bg-waves.png);
 }
 
 .icon-holder {
