@@ -594,7 +594,7 @@ mark {
 
 .vc-custom{
     margin-top: -90px;
-    background-image: url(../img/vc_custom_wave.png);
+    background-image: url(static/img/vc_custom_wave.png);
     background-color: rgb(32,115,73, 0.9)!important;
 }
 
